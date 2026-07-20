@@ -2,6 +2,9 @@
 
 Дипломна работа, специалност Информатика (бакалавър), ФМИ, ПУ „Паисий Хилендарски“.
 
+**Repo:** https://github.com/milengovedarski1804/password-strenghtener-vercel-mg
+**Live демо:** https://epsc.vercel.app
+
 Инструмент за оценка на силата на пароли, който вместо само число или общ
 етикет дава **приоритизиран, обяснен доклад**: за всеки проблем — категория,
 тежест, конкретен фрагмент от паролата и разбираемо обяснение защо е слабост.
@@ -15,6 +18,16 @@ Monorepo с npm workspaces:
 - `packages/core` — чиста TypeScript логика (детектори, scorer, explain, HIBP), без UI зависимости
 - `apps/web` — React + Vite, статичен сайт за публично демо
 - `apps/desktop` — Electron, зарежда build-натата web версия, работи offline
+
+## Клониране на друга машина
+
+```bash
+git clone https://github.com/milengovedarski1804/password-strenghtener-vercel-mg.git
+cd password-strenghtener-vercel-mg
+npm install
+```
+
+Изисква Node.js (LTS) инсталиран на новата машина.
 
 ## Разработка
 
