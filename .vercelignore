@@ -1,0 +1,6 @@
+node_modules
+apps/desktop/release
+apps/desktop/web-dist
+apps/desktop/dist-electron
+coverage
+*.log
