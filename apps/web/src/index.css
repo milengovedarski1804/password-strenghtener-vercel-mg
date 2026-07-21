@@ -87,6 +87,28 @@ body {
   line-height: 1.5;
 }
 
+.app__footer p {
+  margin: 0 0 0.9rem;
+}
+
+.app__download-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.app__download-link:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
 /* PasswordInput */
 
 .password-input {

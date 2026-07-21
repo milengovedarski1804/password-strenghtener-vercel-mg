@@ -148,9 +148,19 @@ export default function App() {
       )}
 
       <footer className="app__footer">
-        🔒 Анализът се изпълнява изцяло във вашия браузър. Към Have I Been
-        Pwned се изпраща само 5-символен префикс на SHA-1 хеша на паролата —
-        самата парола никога не напуска устройството ви.
+        <p>
+          🔒 Анализът се изпълнява изцяло във вашия браузър. Към Have I Been
+          Pwned се изпраща само 5-символен префикс на SHA-1 хеша на паролата —
+          самата парола никога не напуска устройството ви.
+        </p>
+        <a
+          className="app__download-link"
+          href="https://github.com/milengovedarski1804/password-strenghtener-vercel-mg/releases/tag/v1.0.0"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ⬇ Изтегли desktop версията (Windows, portable, работи offline)
+        </a>
       </footer>
     </div>
   );
