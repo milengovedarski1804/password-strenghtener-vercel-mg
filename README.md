@@ -4,6 +4,7 @@
 
 **Repo:** https://github.com/milengovedarski1804/password-strenghtener-vercel-mg
 **Live демо:** https://epsc.vercel.app
+**Desktop download (Windows, portable):** https://github.com/milengovedarski1804/password-strenghtener-vercel-mg/releases/tag/v1.0.0
 
 Инструмент за оценка на силата на пароли, който вместо само число или общ
 етикет дава **приоритизиран, обяснен доклад**: за всеки проблем — категория,
