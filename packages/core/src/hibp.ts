@@ -122,22 +122,28 @@ async function requestRange(
 
 function parseRange(text: string, suffix: string): HibpResult {
   let validLines = 0;
+  let matchCount = 0;
   for (const raw of text.split("\n")) {
     const line = raw.trim().toUpperCase();
     if (!line) continue;
-    if (!LINE_PATTERN.test(line)) continue;
+    if (!LINE_PATTERN.test(line)) {
+      throw new HibpError("invalid_response", "HIBP: отговорът съдържа невалиден ред");
+    }
     validLines++;
     const [lineSuffix, countStr] = line.split(":");
+    const count = Number(countStr);
+    if (!Number.isSafeInteger(count)) {
+      throw new HibpError("invalid_response", "HIBP: невалиден брой в отговора");
+    }
     if (lineSuffix === suffix) {
-      const count = Number(countStr);
       // Редовете-пълнеж имат брой 0 и не означават реален пробив.
-      if (count > 0) return { breached: true, count };
+      if (count > 0) matchCount = count;
     }
   }
   if (validLines === 0) {
     throw new HibpError("invalid_response", "HIBP: отговорът не съдържа валидни данни");
   }
-  return { breached: false, count: 0 };
+  return { breached: matchCount > 0, count: matchCount };
 }
 
 /**

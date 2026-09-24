@@ -123,6 +123,26 @@ describe("checkHibp - надеждност и HTTP статуси", () => {
     const err = await checkHibp("x", { fetchImpl }).catch((e) => e);
     expect(err.kind).toBe("invalid_response");
   });
+
+  it("не отчита липса на пробив при частично невалиден отговор", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(okResponse(`${OTHER}:1\nmalformed`));
+    const err = await checkHibp("x", { fetchImpl }).catch((e) => e);
+    expect(err.kind).toBe("invalid_response");
+  });
+
+  it("отхвърля невалиден ред дори след намерено съвпадение", async () => {
+    const suffix = (await sha1Upper("password")).slice(5);
+    const fetchImpl = vi.fn().mockResolvedValue(okResponse(`${suffix}:5\nmalformed`));
+    const err = await checkHibp("password", { fetchImpl }).catch((e) => e);
+    expect(err.kind).toBe("invalid_response");
+  });
+
+  it("отхвърля брой извън безопасния целочислен диапазон", async () => {
+    const suffix = (await sha1Upper("password")).slice(5);
+    const fetchImpl = vi.fn().mockResolvedValue(okResponse(`${suffix}:9007199254740992`));
+    const err = await checkHibp("password", { fetchImpl }).catch((e) => e);
+    expect(err.kind).toBe("invalid_response");
+  });
 });
 
 describe("hibpFinding", () => {
