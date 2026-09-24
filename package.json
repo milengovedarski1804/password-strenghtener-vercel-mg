@@ -14,5 +14,10 @@
     "dev:desktop": "npm run dev -w @password-checker/desktop",
     "build:desktop": "npm run build -w @password-checker/desktop",
     "package:desktop": "npm run package -w @password-checker/desktop"
+  },
+  "devDependencies": {
+    "@types/zxcvbn": "^4.4.5",
+    "tsx": "^4.23.15",
+    "zxcvbn": "^4.4.2"
   }
 }

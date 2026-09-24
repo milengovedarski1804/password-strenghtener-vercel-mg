@@ -4,7 +4,9 @@ import {
   mergeHibpFinding,
   checkHibp,
   hibpFinding,
+  HibpError,
   type AnalysisResult,
+  type HibpErrorKind,
 } from "@password-checker/core";
 import PasswordInput from "./components/PasswordInput.js";
 import StrengthMeter from "./components/StrengthMeter.js";
@@ -14,7 +16,7 @@ type HibpStatus =
   | { state: "idle" }
   | { state: "loading" }
   | { state: "done"; breached: boolean; count: number }
-  | { state: "error" };
+  | { state: "error"; kind: HibpErrorKind; status?: number };
 
 const HIBP_DEBOUNCE_MS = 500;
 
@@ -29,6 +31,7 @@ export default function App() {
   const [password, setPassword] = useState("");
   const [hibpStatus, setHibpStatus] = useState<HibpStatus>({ state: "idle" });
   const [showAll, setShowAll] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   const baseResult = useMemo(() => analyzePassword(password), [password]);
 
@@ -53,8 +56,14 @@ export default function App() {
             count: result.count,
           });
         }
-      } catch {
-        if (!cancelled) setHibpStatus({ state: "error" });
+      } catch (e) {
+        if (!cancelled) {
+          setHibpStatus(
+            e instanceof HibpError
+              ? { state: "error", kind: e.kind, status: e.status }
+              : { state: "error", kind: "network" }
+          );
+        }
       }
     }, HIBP_DEBOUNCE_MS);
 
@@ -62,7 +71,7 @@ export default function App() {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [password]);
+  }, [password, retryKey]);
 
   const result: AnalysisResult = useMemo(() => {
     if (hibpStatus.state !== "done") return baseResult;
@@ -111,7 +120,7 @@ export default function App() {
         <>
           <StrengthMeter score={result.score} label={result.label} />
 
-          <HibpBanner status={hibpStatus} />
+          <HibpBanner status={hibpStatus} onRetry={() => setRetryKey((k) => k + 1)} />
 
           <div className="findings">
             <div className="findings__heading">
@@ -166,7 +175,16 @@ export default function App() {
   );
 }
 
-function HibpBanner({ status }: { status: HibpStatus }) {
+const HIBP_ERROR_TEXT: Record<HibpErrorKind, string> = {
+  network: "Няма връзка с услугата Have I Been Pwned (вероятно няма интернет).",
+  timeout: "Услугата Have I Been Pwned не отговори навреме.",
+  rate_limited: "Услугата Have I Been Pwned временно ограничава заявките.",
+  server_error: "Услугата Have I Been Pwned временно не е достъпна.",
+  http_error: "Услугата Have I Been Pwned върна неочакван отговор.",
+  invalid_response: "Отговорът от Have I Been Pwned не е в очаквания формат.",
+};
+
+function HibpBanner({ status, onRetry }: { status: HibpStatus; onRetry: () => void }) {
   if (status.state === "idle") return null;
 
   if (status.state === "loading") {
@@ -180,8 +198,12 @@ function HibpBanner({ status }: { status: HibpStatus }) {
   if (status.state === "error") {
     return (
       <div className="hibp-banner hibp-banner--error">
-        Проверката срещу Have I Been Pwned не бе възможна (вероятно няма
-        връзка с интернет) — останалият анализ е пълен.
+        {HIBP_ERROR_TEXT[status.kind]}
+        {status.status ? ` (HTTP ${status.status})` : ""} Проверката за пробиви
+        не е извършена - останалият анализ е пълен.{" "}
+        <button type="button" className="hibp-retry" onClick={onRetry}>
+          Опитай отново
+        </button>
       </div>
     );
   }
