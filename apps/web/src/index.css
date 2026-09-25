@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: dark;
   --bg: #0f1115;
   --surface: #171a21;
   --surface-2: #1f232c;
@@ -12,6 +12,21 @@
   --low: #6fcf97;
   --accent: #7c9cff;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f6;
+  --border: #cbd2df;
+  --text: #172033;
+  --text-dim: #4b5870;
+  --critical: #bd2630;
+  --high: #a94f0b;
+  --medium: #8a6500;
+  --low: #28784b;
+  --accent: #234db5;
 }
 
 * {
@@ -29,6 +44,28 @@ body {
   max-width: 720px;
   margin: 0 auto;
   padding: 2.5rem 1.5rem 4rem;
+}
+
+.app__controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.app__controls button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0.4rem 0.8rem;
+  font: inherit;
+  font-size: 0.8rem;
+}
+
+.app__controls button:hover,
+.app__controls button:focus-visible {
+  border-color: var(--accent);
 }
 
 .app__title {

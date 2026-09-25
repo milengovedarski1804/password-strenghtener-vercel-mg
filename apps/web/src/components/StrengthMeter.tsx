@@ -1,4 +1,5 @@
 import type { AnalysisResult } from "@password-checker/core";
+import { scoreLabels, type Language } from "../i18n.js";
 
 const LABEL_COLOR: Record<AnalysisResult["label"], string> = {
   "много слаба": "var(--critical)",
@@ -11,9 +12,10 @@ const LABEL_COLOR: Record<AnalysisResult["label"], string> = {
 interface StrengthMeterProps {
   score: number;
   label: AnalysisResult["label"];
+  language: Language;
 }
 
-export default function StrengthMeter({ score, label }: StrengthMeterProps) {
+export default function StrengthMeter({ score, label, language }: StrengthMeterProps) {
   const color = LABEL_COLOR[label];
   return (
     <div className="strength-meter">
@@ -25,7 +27,7 @@ export default function StrengthMeter({ score, label }: StrengthMeterProps) {
       </div>
       <div className="strength-meter__label-row">
         <span className="strength-meter__label" style={{ color }}>
-          {label}
+          {scoreLabels[language][label]}
         </span>
         <span>{score}/100</span>
       </div>
