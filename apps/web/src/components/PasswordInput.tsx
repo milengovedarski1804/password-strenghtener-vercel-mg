@@ -1,17 +1,20 @@
 import { useState } from "react";
 import type { Finding } from "@password-checker/core";
 import HighlightedPassword from "./HighlightedPassword.js";
+import type { Language } from "../i18n.js";
 
 interface PasswordInputProps {
   password: string;
   onChange: (value: string) => void;
   findings: Finding[];
+  language: Language;
 }
 
 export default function PasswordInput({
   password,
   onChange,
   findings,
+  language,
 }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
 
@@ -28,10 +31,10 @@ export default function PasswordInput({
           type={visible ? "text" : "password"}
           value={password}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Въведете парола за анализ..."
+          placeholder={language === "bg" ? "Въведете парола за анализ..." : "Enter a password to analyze..."}
           autoComplete="new-password"
           spellCheck={false}
-          aria-label="Парола за анализ"
+          aria-label={language === "bg" ? "Парола за анализ" : "Password to analyze"}
         />
         <button
           type="button"
@@ -39,7 +42,7 @@ export default function PasswordInput({
           onClick={() => setVisible((v) => !v)}
           aria-pressed={visible}
         >
-          {visible ? "Скрий" : "Покажи"}
+          {language === "bg" ? (visible ? "Скрий" : "Покажи") : (visible ? "Hide" : "Show")}
         </button>
       </div>
     </div>

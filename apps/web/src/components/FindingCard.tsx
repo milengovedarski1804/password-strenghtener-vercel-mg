@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { Finding, FindingCategory } from "@password-checker/core";
+import type { Finding } from "@password-checker/core";
+import { categoryTitles, findingExplanation, severityLabels, type Language } from "../i18n.js";
 
 const SEVERITY_COLOR: Record<Finding["severity"], string> = {
   critical: "var(--critical)",
@@ -15,36 +16,13 @@ const SEVERITY_ICON: Record<Finding["severity"], string> = {
   low: "ℹ",
 };
 
-const SEVERITY_LABEL: Record<Finding["severity"], string> = {
-  critical: "критично",
-  high: "високо",
-  medium: "средно",
-  low: "ниско",
-};
-
-const CATEGORY_TITLE: Record<FindingCategory, string> = {
-  too_short: "Твърде кратка парола",
-  single_char_class: "Само един тип символи",
-  pure_digits: "Само цифри",
-  date_pattern: "Прилича на дата",
-  phone_number: "Прилича на телефонен номер",
-  keyboard_pattern: "Модел от клавиатурата",
-  repeated_chars: "Повтарящи се символи",
-  sequence: "Възходяща/низходяща поредица",
-  leet_substitution: "Предвидима замяна на символи (leet)",
-  email_format: "Прилича на имейл адрес",
-  dictionary_word: "Речникова дума",
-  common_name: "Често срещано име",
-  top_common_password: "Сред най-честите пароли в света",
-  composite_pattern: "Комбинация от предвидими елементи",
-  breached_password: "Открита в известни пробиви",
-};
-
 interface FindingCardProps {
   finding: Finding;
+  password: string;
+  language: Language;
 }
 
-export default function FindingCard({ finding }: FindingCardProps) {
+export default function FindingCard({ finding, password, language }: FindingCardProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -58,12 +36,12 @@ export default function FindingCard({ finding }: FindingCardProps) {
         <span
           className="finding-card__severity-icon"
           style={{ color: SEVERITY_COLOR[finding.severity] }}
-          title={`Тежест: ${SEVERITY_LABEL[finding.severity]}`}
+          title={`${language === "bg" ? "Тежест" : "Severity"}: ${severityLabels[language][finding.severity]}`}
         >
           {SEVERITY_ICON[finding.severity]}
         </span>
         <span className="finding-card__title">
-          {CATEGORY_TITLE[finding.category]}
+          {categoryTitles[language][finding.category]}
         </span>
         <span
           className="finding-card__severity-badge"
@@ -72,7 +50,7 @@ export default function FindingCard({ finding }: FindingCardProps) {
             borderColor: SEVERITY_COLOR[finding.severity],
           }}
         >
-          {SEVERITY_LABEL[finding.severity]}
+          {severityLabels[language][finding.severity]}
         </span>
         <span
           className={`finding-card__chevron${open ? " finding-card__chevron--open" : ""}`}
@@ -82,8 +60,8 @@ export default function FindingCard({ finding }: FindingCardProps) {
       </button>
       {open && (
         <div className="finding-card__body">
-          <p>{finding.explanation}</p>
-          {finding.detail && (
+          <p>{findingExplanation(finding, password, language)}</p>
+          {finding.detail && language === "bg" && (
             <p className="finding-card__detail">{finding.detail}</p>
           )}
         </div>
