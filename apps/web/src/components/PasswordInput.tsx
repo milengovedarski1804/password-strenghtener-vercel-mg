@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Finding } from "@password-checker/core";
 import HighlightedPassword from "./HighlightedPassword.js";
 import type { Language } from "../i18n.js";
@@ -17,6 +17,13 @@ export default function PasswordInput({
   language,
 }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function clearPassword() {
+    onChange("");
+    setVisible(false);
+    inputRef.current?.focus();
+  }
 
   return (
     <div className="password-input">
@@ -27,6 +34,7 @@ export default function PasswordInput({
           </div>
         )}
         <input
+          ref={inputRef}
           className="password-input__field"
           type={visible ? "text" : "password"}
           value={password}
@@ -36,6 +44,16 @@ export default function PasswordInput({
           spellCheck={false}
           aria-label={language === "bg" ? "Парола за анализ" : "Password to analyze"}
         />
+        {password.length > 0 && (
+          <button
+            type="button"
+            className="password-input__clear"
+            onClick={clearPassword}
+            aria-label={language === "bg" ? "Изчисти паролата и резултата" : "Clear password and result"}
+          >
+            {language === "bg" ? "Изчисти" : "Clear"}
+          </button>
+        )}
         <button
           type="button"
           className="password-input__toggle"
