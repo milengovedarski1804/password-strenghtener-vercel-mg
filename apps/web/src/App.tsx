@@ -209,9 +209,15 @@ const HIBP_ERROR_TEXT_EN: Record<HibpErrorKind, string> = {
 function HibpBanner({ status, language, onRetry }: { status: HibpStatus; language: Language; onRetry: () => void }) {
   if (status.state === "idle") return null;
 
+  const officialLink = (
+    <a href="https://haveibeenpwned.com/Passwords" target="_blank" rel="noopener noreferrer" className="hibp-banner__link">
+      {language === "bg" ? "Проверете и в официалния сайт на HIBP ↗" : "Check on the official HIBP site ↗"}
+    </a>
+  );
+
   if (status.state === "loading") {
     return (
-      <div className="hibp-banner hibp-banner--loading">
+      <div className="hibp-banner hibp-banner--loading" role="status">
         {language === "bg" ? "Проверка срещу известни пробиви на данни (Have I Been Pwned)..." : "Checking known breaches with Have I Been Pwned..."}
       </div>
     );
@@ -219,27 +225,36 @@ function HibpBanner({ status, language, onRetry }: { status: HibpStatus; languag
 
   if (status.state === "error") {
     return (
-      <div className="hibp-banner hibp-banner--error">
-        {(language === "bg" ? HIBP_ERROR_TEXT : HIBP_ERROR_TEXT_EN)[status.kind]}
-        {status.status ? ` (HTTP ${status.status})` : ""} {language === "bg" ? "Проверката за пробиви не е извършена - останалият анализ е пълен." : "The breach check was not completed; the other analysis is complete."}{" "}
-        <button type="button" className="hibp-retry" onClick={onRetry}>
-          {language === "bg" ? "Опитай отново" : "Try again"}
-        </button>
+      <div className="hibp-banner hibp-banner--error" role="status">
+        <strong>{language === "bg" ? "Проверката за пробиви не завърши" : "Breach check incomplete"}</strong>
+        <span>{(language === "bg" ? HIBP_ERROR_TEXT : HIBP_ERROR_TEXT_EN)[status.kind]}
+          {status.status ? ` (HTTP ${status.status})` : ""} {language === "bg" ? "Резултатът от другите проверки остава валиден." : "The other analysis is still available."}
+        </span>
+        <div className="hibp-banner__actions">
+          <button type="button" className="hibp-retry" onClick={onRetry}>
+            {language === "bg" ? "Опитай отново" : "Try again"}
+          </button>
+          {officialLink}
+        </div>
       </div>
     );
   }
 
   if (status.breached) {
     return (
-      <div className="hibp-banner hibp-banner--breached">
-        {language === "bg" ? `⚠ Намерена в известни пробиви ${status.count.toLocaleString("bg-BG")} пъти (Have I Been Pwned).` : `⚠ Found ${status.count.toLocaleString("en-US")} times in known breaches (Have I Been Pwned).`}
+      <div className="hibp-banner hibp-banner--breached" role="status">
+        <strong>{language === "bg" ? "⚠ Паролата е открита в пробиви" : "⚠ Password found in breaches"}</strong>
+        <span>{language === "bg" ? `HIBP я е отчел ${status.count.toLocaleString("bg-BG")} пъти. Не я използвайте; ако вече я използвате, сменете я навсякъде.` : `HIBP has recorded it ${status.count.toLocaleString("en-US")} times. Do not use it; if you already do, change it wherever it is used.`}</span>
+        {officialLink}
       </div>
     );
   }
 
   return (
-    <div className="hibp-banner hibp-banner--clean">
-      {language === "bg" ? "✓ Не е открита в известните пробиви, проверени от Have I Been Pwned." : "✓ Not found in the known breaches checked by Have I Been Pwned."}
+    <div className="hibp-banner hibp-banner--clean" role="status">
+      <strong>{language === "bg" ? "✓ Не е открита в данните на HIBP" : "✓ Not found in HIBP's data"}</strong>
+      <span>{language === "bg" ? "Това не гарантира, че паролата е безопасна. Прегледайте и останалите открити проблеми." : "This does not guarantee that the password is safe. Review the other findings too."}</span>
+      {officialLink}
     </div>
   );
 }
