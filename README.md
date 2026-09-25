@@ -6,6 +6,8 @@
 **Live демо:** https://epsc.vercel.app
 **Desktop download (Windows, portable):** https://github.com/milengovedarski1804/password-strenghtener-vercel-mg/releases/tag/v1.0.0
 
+[Change notes](CHANGELOG.md) describe updates to the live web app and HIBP integration.
+
 Инструмент за оценка на силата на пароли, който вместо само число или общ
 етикет дава **приоритизиран, обяснен доклад**: за всеки проблем — категория,
 тежест, конкретен фрагмент от паролата и разбираемо обяснение защо е слабост.

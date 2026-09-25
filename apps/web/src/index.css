@@ -168,6 +168,7 @@ body {
 
 .password-input__field {
   flex: 1;
+  min-width: 0;
   padding: 0.9rem 1rem;
   font-size: 1.05rem;
   background: transparent;
@@ -197,7 +198,8 @@ body {
   border-radius: 3px;
 }
 
-.password-input__toggle {
+.password-input__toggle,
+.password-input__clear {
   padding: 0 1.1rem;
   background: var(--surface-2);
   border: none;
@@ -207,8 +209,38 @@ body {
   font-size: 0.85rem;
 }
 
-.password-input__toggle:hover {
+.password-input__clear {
+  background: transparent;
+}
+
+.password-input__toggle:hover,
+.password-input__clear:hover {
   color: var(--text);
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .app__title {
+    font-size: 1.35rem;
+  }
+
+  .password-input__toggle,
+  .password-input__clear {
+    padding: 0 0.65rem;
+  }
+
+  .password-input__field {
+    padding: 0.85rem 0.65rem;
+    font-size: 0.95rem;
+  }
+
+  .password-input__overlay {
+    padding: 0.85rem 0.65rem;
+    font-size: 0.95rem;
+  }
 }
 
 /* StrengthMeter */
